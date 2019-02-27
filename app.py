@@ -1,3 +1,7 @@
+# codeing:utf8
+"""
+flask web 例子
+"""
 from flask import Flask
 app = Flask(__name__)
 
