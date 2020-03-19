@@ -1,3 +1,4 @@
+<!--导航栏-->
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -6,7 +7,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
-    <title>飞电影</title>
+    <title>飞飞电影</title>
     <link rel="shortcut icon" href="{{url_for('static', filename='base/images/logo.png')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='base/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='base/css/bootstrap-movie.css')}}">
@@ -31,7 +32,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="index.html" class="navbar-brand" style="width:250px;">
-                <img src="{{url_for('static', filename='base/images/logo.png')}}" style="height:30px;">&nbsp;飞电影
+                <img src="{{url_for('static', filename='base/images/logo.png')}}" style="height:30px;">&nbsp;飞飞电影
             </a>
         </div>
         <!--小屏幕导航按钮和logo-->
@@ -47,19 +48,19 @@
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a class="curlink" href="{{url_for('home.index')}}"><span class="glyphicon glyphicon-film"></span>&nbsp;电影</a>
+                    <a class="curlink" href="{{ url_for('home.index') }}"><span class="glyphicon glyphicon-film"></span>&nbsp;电影</a>
                 </li>
                 <li>
-                    <a class="curlink" href="{{url_for('home.login')}}"><span class="glyphicon glyphicon-log-in"></span>&nbsp;登录</a>
+                    <a class="curlink" href="{{ url_for('home.login') }}"><span class="glyphicon glyphicon-log-in"></span>&nbsp;登录</a>
                 </li>
                 <li>
-                    <a class="curlink" href="{{url_for('home.regist')}}"><span class="glyphicon glyphicon-plus"></span>&nbsp;注册</a>
+                    <a class="curlink" href="{{ url_for('home.regist' )}}"><span class="glyphicon glyphicon-plus"></span>&nbsp;注册</a>
                 </li>
                 <li>
-                    <a class="curlink" href="{{url_for('home.logout')}}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;退出</a>
+                    <a class="curlink" href="{{ url_for('home.logout') }}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;退出</a>
                 </li>
                 <li>
-                    <a class="curlink" href="{{url_for('home.user')}}"><span class="glyphicon glyphicon-user"></span>&nbsp;会员</a>
+                    <a class="curlink" href="{{ url_for('home.user') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;会员</a>
                 </li>
             </ul>
         </div>
