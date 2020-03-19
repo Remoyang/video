@@ -12,7 +12,7 @@ def index():
 def login():
     return render_template("home/login.html")
 
-#退出
+# 退出
 @home.route("/logout/")
 def logout():
     return redirect(url_for("home.login"))
@@ -57,7 +57,7 @@ def animation():
 def search():
     return render_template("home/search.html")
 
-# 搜索
+# 播放
 @home.route("/play/")
 def play():
     return render_template("home/play.html")
