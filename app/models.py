@@ -1,8 +1,9 @@
 # -*- coding: utf8 -*-
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import pymysql
+
 
 app = Flask(__name__)
 # 连接数据库
