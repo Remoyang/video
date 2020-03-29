@@ -1,20 +1,21 @@
 # coding:utf8
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-from app.admin import admin as admin_blueprint
-from app.home import home as home_blueprint
-# from app import db
+
 app = Flask(__name__)
 app.debug = True
 
 # DB init
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@192.168.168.100:30006/movie"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@10.71.70.129:3306/movie"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'cb34xxxxxxxxxxxxxxxxxxbae30d90f6'
 db = SQLAlchemy(app)
 
 # 导入蓝图
+from app.admin import admin as admin_blueprint
+from app.home import home as home_blueprint
+
 app.register_blueprint(admin_blueprint, url_prefix="/admin")
 app.register_blueprint(home_blueprint)
 

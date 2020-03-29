@@ -3,14 +3,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from app import db
 
-
-app = Flask(__name__)
-# 连接数据库
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@192.168.168.100:30006/movie"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-
-db = SQLAlchemy(app)
+# app = Flask(__name__)
+# # 连接数据库
+# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@10.71.70.129:3306/movie"
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+# db = SQLAlchemy(app)
 
 
 # 定义数据库表
@@ -26,9 +25,9 @@ class User(db.Model):
     face = db.Column(db.String(255), unique=True)
     addtim = db.Column(db.DateTime, index=True, default=datetime.now())
     uuid = db.Column(db.String(255), unique=True)
-    userlogs = db.relationship('Userlog', backerf='user')  # 会员日志外键关系
-    comments = db.relationship('Comment', backerf='user')  # 评论外键关系
-    moviecols = db.relationship('Moviecol', backerf='user')  # 评论外键关系
+    userlogs = db.relationship('Userlog', backref='user')  # 会员日志外键关系
+    comments = db.relationship('Comment', backref='user')  # 评论外键关系
+    moviecols = db.relationship('Moviecol', backref='user')  # 评论外键关系
 
     def __repr__(self):
         return "<User %r>" % self.name
@@ -74,8 +73,8 @@ class Movie(db.Model):
     release_time = db.Column(db.Date)  # 上映时间
     length = db.Column(db.String(100))  # 播放时间
     addtime = db.Column(db.DateTime, index=True, default=datetime.now)  # 添加时间
-    comments = db.relationship('Comment', backerf='movie')  # 评论外键关系
-    moviecols = db.relationship('Moviecol', backerf='movie')  # 电影收藏外键关系
+    comments = db.relationship('Comment', backref='movie')  # 评论外键关系
+    moviecols = db.relationship('Moviecol', backref='movie')  # 电影收藏外键关系
 
     def __repr__(self):
         return "<Movie %r>" % self.title
@@ -137,7 +136,7 @@ class Role(db.Model):
     name = db.Column(db.String(100), unique=True)  # 名称
     auths = db.Column(db.String(600))  # 角色
     addtime = db.Column(db.DateTime, index=True, default=datetime.now)  # 添加时间
-    admins = db.relationship('Admin', backerf='role')  # 管理员外键关系
+    admins = db.relationship('Admin', backref='role')  # 管理员外键关系
 
     def __repr__(self):
         return "<Role %r>" % self.name
@@ -152,11 +151,15 @@ class Admin(db.Model):
     is_super = db.Column(db.SmallInteger)  # 是否为超级管理员 0为超级管理员
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))  # 所属角色
     addtime = db.Column(db.DateTime, index=True, default=datetime.now)  # 添加时间
-    Adminlogs = db.relationship('Adminlog', backerf='admin')  # 管理员登陆日志外键关系
-    oplogs = db.relationship('Oplog', backerf='admin')  # 管理员登陆日志外键关系
+    Adminlogs = db.relationship('Adminlog', backref='admin')  # 管理员登陆日志外键关系
+    oplogs = db.relationship('Oplog', backref='admin')  # 管理员登陆日志外键关系
 
     def __repr__(self):
         return "<Admin %r>" % self.name
+
+    def check_pwd(self, pwd):
+        from werkzeug.security import check_password_hash
+        return check_password_hash(self.pwd, pwd)
 
 
 # 管理员登陆日志
@@ -191,7 +194,7 @@ if __name__ == '__main__':
     # 2.插入数据
     # 这里插入一条角色的数据
     """
-     role = Role(
+    role = Role(
         name="超级管理员",
         auths="0")
     db.session.add(role)
@@ -202,7 +205,7 @@ if __name__ == '__main__':
     from werkzeug.security import generate_password_hash  # 导入生成密码的工具
 
     admin = Admin(
-        namr="admin",
+        name="admin",
         pwd=generate_password_hash("123456"),
         is_super=0,
         role_id=1
