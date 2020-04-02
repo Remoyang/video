@@ -1,15 +1,17 @@
 # coding:utf8
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.debug = True
+import os
 
 # DB init
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@10.71.70.129:3306/movie"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'cb34xxxxxxxxxxxxxxxxxxbae30d90f6'
+app.config["UP_DIR"] = os.path.join(os.path.abspath(os.path.dirname(__file__)), "static/uploads/")
+
+# app init
+app.debug = True
 db = SQLAlchemy(app)
 
 # 导入蓝图
@@ -25,7 +27,7 @@ def page_not_found(error):
     return render_template("home/404.html"), 404
 
 # 500
-@app.errorhandler(500)
-def internal_error(error):
-    db.session.rollback()
-    return render_template('home/500.html'), 500
+# @app.errorhandler(500)
+# def internal_error(error):
+#     db.session.rollback()
+#     return render_template('home/500.html'), 500
