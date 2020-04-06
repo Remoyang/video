@@ -3,7 +3,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, FileField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, ValidationError
-from app.models import Admin, Tag  # 导入数据库管理员表的那个类
+from app.models import Admin, Tag, Movie  # 导入数据库管理员表的那个类
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -151,10 +151,22 @@ class MovieForm(FlaskForm):
         description="上映时间",
         render_kw={
             "class": "form-control",
+            "id": "input_release_time",
             "placeholder": "请选择上映时间！",
-            "id": "inout_release_time",
         }
     )
+    submit = SubmitField(
+        "编辑",
+        render_kw={
+            'class': 'btn btn-primary'
+        }
+    )
+
+    # def validate_title(self, field):
+    #     title = field.data
+    #     num = Movie.query.filter_by(title=title).count()
+    #     if num > 0:
+    #         raise ValidationError("该电影已存在!")
 
 
 class TagForm(FlaskForm):
