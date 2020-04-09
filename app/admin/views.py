@@ -78,14 +78,7 @@ def tag_add():
         )
         db.session.add(tag)
         db.session.commit()
-        flash("添加标签成功！ ", 'OK')
-        # oplog = Oplog(
-        #     admin_id=session["admin_id"],
-        #     ip=request.remote_addr,
-        #     reason="添加标签%s" % data["name"]
-        # )
-        # db.session.add(oplog)
-        # db.session.commit()
+        flash("添加标签成功！ ", 'info')
 
         return redirect(url_for("admin.tag_add"))
 
@@ -94,7 +87,6 @@ def tag_add():
 # 后端标签列表
 @admin.route("/tag/list/<int:page>/", methods=["GET"])
 @admin_login_req
-# @admin_auth
 def tag_list(page=None):
     if page is None:
         page = 1
@@ -102,6 +94,42 @@ def tag_list(page=None):
         Tag.addtime.desc()
     ).paginate(page=page, per_page=10)
     return render_template("admin/tag_list.html", page_data=page_data)
+
+# 后端标签编辑
+@admin.route("/tag/edit/<int:id>/", methods=["GET", "POST"])
+@admin_login_req
+def tag_edit(id=None):
+    form = TagForm()
+    tag = Tag.query.get_or_404(int(id))
+    # 如果是请求的话填充信息
+    if request.method == "GET":
+        form.name.data = tag.name
+
+    if form.validate_on_submit():
+        data = form.data
+        tag_count = Tag.query.filter_by(name=data["name"]).count()
+        if tag_count == 1 and Tag.name != data.get("name"):
+            flash("标签已经存在，请重新输入!", "err")
+            return redirect(url_for("admin.tag_edit", id=id))
+
+        tag.name = data.get("name")
+
+        db.session.add(tag)
+        db.session.commit()
+        flash("修改标签成功！ ", 'info')
+        return redirect(url_for("admin.tag_add", id=tag.id))
+
+    return render_template("admin/tag_edit.html", form=form, tag=tag)
+
+# 后端标签删除
+@admin.route("/tag/del/<int:id>/", methods=["GET"])
+@admin_login_req
+def tag_del(id=None):
+    movie = Tag.query.get_or_404(int(id))
+    db.session.delete(movie)
+    db.session.commit()
+    flash("删除标签成功！ ", 'OK')
+    return redirect(url_for("admin.tag_list", page=1))
 
 # 后端添加电影
 @admin.route("/movie/add/", methods=["GET", "POST"])
@@ -155,7 +183,7 @@ def movie_list(page=None):
     return render_template("admin/movie_list.html", page_data=page_data)
 
 
-# 后端添加电影
+# 后端编辑电影
 @admin.route("/movie/edit/<int:id>/", methods=["GET", "POST"])
 @admin_login_req
 def movie_edit(id=None):
